@@ -1,5 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
-import { Criteria } from "./Criteria";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Criteria } from './Criteria';
 
 @Entity()
 export class CriteriaScale {
@@ -7,14 +7,13 @@ export class CriteriaScale {
   id: number;
 
   @ManyToOne(type => Criteria)
-  criteria: Criteria;
+  @JoinColumn({ name: 'criteria_id' })
+  criteria_id: Criteria;
 
-  @Column({ type: "varchar", length: 255 })
-  label: string;
+  @Column({ type: 'text' })
+  description: string;
 
-  @Column()
+  @Column({ type: 'int' })
   value: number;
 
-  @Column()
-  isActive: boolean;
 }

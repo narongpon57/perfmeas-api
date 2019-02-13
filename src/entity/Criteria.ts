@@ -12,5 +12,5 @@ export class Criteria {
   weight: number;
 
   @Column({ type: "bit" })
-  isActive: number;
+  is_active: number;
 }

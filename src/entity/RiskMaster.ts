@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { RiskAssessment } from './RiskAssessment';
 
 @Entity()
 export class RiskMaster {
@@ -12,6 +13,9 @@ export class RiskMaster {
   risk_type: string;
 
   @Column({ type: 'varchar', length: 255 })
+  risk_group: string;
+
+  @Column({ type: 'varchar', length: 255 })
   identified: string;
 
   @Column({ type: 'varchar', length: 255 })
@@ -21,5 +25,8 @@ export class RiskMaster {
   description: string;
 
   @Column({ type: 'bit' })
-  isActive: number;
+  is_active: number;
+
+  @OneToMany(type => RiskAssessment, risk_assessment => risk_assessment.risk)
+  risk_assessment: RiskAssessment[]
 }

@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { CriteriaScale } from "./CriteriaScale"
 
 @Entity()
 export class Criteria {
@@ -13,4 +14,7 @@ export class Criteria {
 
   @Column({ type: "bit" })
   is_active: number;
+
+  @OneToMany(type => CriteriaScale, criteriaScale => criteriaScale.criteria)
+  criteriaScales: CriteriaScale[]
 }

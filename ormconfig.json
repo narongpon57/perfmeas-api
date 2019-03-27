@@ -5,8 +5,8 @@
    "username": "narongpon.su",
    "password": "1234",
    "database": "perfmeas",
-   "synchronize": true,
-   "logging": false,
+   "synchronize": false,
+   "logging": true,
    "entities": [
       "src/entity/**/*.ts"
    ],

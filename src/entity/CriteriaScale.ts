@@ -6,9 +6,9 @@ export class CriteriaScale {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(type => Criteria)
+  @ManyToOne(type => Criteria, criteria => criteria.criteriaScales)
   @JoinColumn({ name: 'criteria_id' })
-  criteria_id: Criteria;
+  criteria: Criteria;
 
   @Column({ type: 'text' })
   description: string;

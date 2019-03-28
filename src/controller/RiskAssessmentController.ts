@@ -73,7 +73,7 @@ const createAssessment = async (data) => {
     const assessment = repo.create()
     assessment.org = data.org_id
     assessment.year = data.year
-    assessment.status = 'waiting for approve'
+    assessment.status = 'Initial'
     assessment.created_at = new Date()
     const result = await repo.save(assessment)
     return result

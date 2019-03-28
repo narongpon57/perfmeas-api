@@ -37,7 +37,6 @@ const getRiskAssessment = async (req: Request, res: Response) => {
   try {
     const repo = getCustomRepository(RiskAssessmentRepository)
     const result = await repo.getAssessment(req.query.org_id, req.query.year)
-    console.log(result)
     return res.status(200).json({ result })
   } catch (e) {
     console.log(e)
@@ -60,7 +59,6 @@ const getWorkList = async (req: Request, res: Response) => {
   try {
     const repo = getCustomRepository(AssessmentRepository)
     const result = await repo.getWorkList(req.query.user_id)
-    console.log(result)
     return res.status(200).json({ result })
   } catch (e) {
     return res.status(500).json({ e })

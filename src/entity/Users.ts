@@ -10,7 +10,7 @@ export class Users {
   @Column({ type: 'varchar', length: 50 })
   username: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'varchar', length: 50, select: false })
   password: string;
 
   @Column({ type: 'varchar', length: 6 })

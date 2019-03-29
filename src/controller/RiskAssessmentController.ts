@@ -7,7 +7,7 @@ import { RiskAssessmentIndicatorRepository } from '../repository/RiskAssessmentI
 const create = async (req: Request, res: Response) => {
   try {
 
-    const assessment = await createAssessment({ org_id: req.body.org.id, year: req.body.year })
+    const assessment = await createAssessment({ org_id: req.body.org.id, year: req.body.year }, req.body.status)
     const riskAssessment = await createRiskAssessment({ risk_assessments: req.body.assessment.risk_assessment }, assessment.id)
     return res.status(201).json({ result: assessment })
   } catch (e) {
@@ -27,6 +27,7 @@ const update = async (req: Request, res: Response) => {
     const removeRiskAssessment = await repoRiskAssessment.remove(currentRiskAssessment)
 
     const riskAssessment = await createRiskAssessment({ risk_assessments: req.body.assessment.risk_assessment }, req.body.assessment.id)
+    const updateAssessmentStatus = await updateRiskAssessment(req.body.status, req.body.assessment.id)
     return res.status(201).json({})
   } catch (e) {
     return res.status(500).json(e)
@@ -65,13 +66,13 @@ const getWorkList = async (req: Request, res: Response) => {
   }
 }
 
-const createAssessment = async (data) => {
+const createAssessment = async (data, status) => {
   try {
     const repo = getCustomRepository(AssessmentRepository)
     const assessment = repo.create()
     assessment.org = data.org_id
     assessment.year = data.year
-    assessment.status = 'Initial'
+    assessment.status = status
     assessment.created_at = new Date()
     const result = await repo.save(assessment)
     return result
@@ -110,6 +111,19 @@ const createRiskAssessmentIndicator = async (risk_indicator, risk_assessment_id)
       await repo.save(RiskAssessmentIndicator)
     }
     return true
+  } catch (e) {
+    throw new Error(e)
+  }
+}
+
+const updateRiskAssessment = async (status: string, assessmentId: number) => {
+  try {
+    const repo = getCustomRepository(AssessmentRepository)
+    const assessment = repo.create()
+    assessment.id = assessmentId
+    assessment.status = status
+    const result = await repo.save(assessment)
+    return result
   } catch (e) {
     throw new Error(e)
   }

@@ -9,7 +9,7 @@ export class AssessmentRepository extends Repository<Assessment> {
 			.createQueryBuilder()
 			.update(Assessment)
 			.set({ status: status })
-			.where("id = :id", { id: 1 })
+			.where("id = :id", { id: id })
 			.execute()
 	}
 

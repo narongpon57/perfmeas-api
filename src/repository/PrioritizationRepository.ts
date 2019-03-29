@@ -13,7 +13,7 @@ export class PrioritizationRepository extends Repository<Prioritization> {
 			LEFT JOIN indicator_master im on im.id = rai.indicator_id
 			LEFT JOIN risk_assessment ra on ra.id = rai.risk_assessment_id
 			LEFT JOIN assessment a on a.id = ra.assessment_id
-			WHERE a.org_id = $1 and a.year = $2
+			WHERE a.org_id = $1 and a.year = $2 and a.status = 'QIKM Approve'
 			ORDER BY rai.priority_score desc, im.code asc
 			`, [org_id, year])
 	}

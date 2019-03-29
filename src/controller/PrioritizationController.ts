@@ -43,6 +43,7 @@ const getPrioritization = async (req: Request, res: Response) => {
 	try {
 		const repo = getCustomRepository(PrioritizationRepository)
 		const result = await repo.getPrioritization(req.query.org_id, req.query.year)
+		console.log(result)
 		return res.status(200).json({ result })
 	} catch (e) {
 		return res.status(500).json({ e })

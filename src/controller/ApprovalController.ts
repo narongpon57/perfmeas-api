@@ -16,7 +16,7 @@ const create = async (req: Request, res: Response) => {
 			approval.created_by = approve_by
 		}
 		const approve = await approvalrepo.save(approval)
-		await assessmentRepo.updateStatus(approve.id, status)
+		await assessmentRepo.updateStatus(assessment_id, status)
 		const result = await approvalrepo.finds(approve.id)
 		return res.status(201).json({ result })
 	} catch (e) {

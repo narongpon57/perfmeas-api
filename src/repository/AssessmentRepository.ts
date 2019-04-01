@@ -17,6 +17,8 @@ export class AssessmentRepository extends Repository<Assessment> {
 		return await getRepository(Assessment)
 			.createQueryBuilder("assessment")
 			.leftJoinAndSelect("assessment.org", "organization_unit")
+			.leftJoinAndSelect("organization_unit.creator", "users")
+			.leftJoinAndSelect("organization_unit.step1_approver", "users1")
 			.where("organization_unit.creator_id = :user_id or organization_unit.step1_approver_id = :user_id", {
 				user_id: userId
 			})

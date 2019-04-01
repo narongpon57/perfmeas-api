@@ -15,6 +15,7 @@ export class RiskMasterRepository extends Repository<RiskMaster> {
 				problem_area: `%${problemArea}%`,
 				identified: `%${identified}%`
 			})
+			.orderBy('id', 'ASC')
 			.getMany()
 	}
 

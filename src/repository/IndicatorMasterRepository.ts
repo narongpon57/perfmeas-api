@@ -15,6 +15,7 @@ export class IndicatorMasterRepository extends Repository<IndicatorMaster> {
 				standard: `%${standard}%`,
 				measurement_domain: `%${measurement_domain}%`
 			})
+			.orderBy('id', 'ASC')
 			.getMany()
 	}
 

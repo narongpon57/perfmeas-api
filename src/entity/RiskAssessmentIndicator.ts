@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToOne } from 'typeorm';
 import { RiskAssessment } from './RiskAssessment'
 import { IndicatorMaster } from './IndicatorMaster'
+import { PerformanceMeasurement } from './PerformanceMeasurement';
 
 @Entity()
 export class RiskAssessmentIndicator {
@@ -17,4 +18,8 @@ export class RiskAssessmentIndicator {
 
   @Column({ type: 'int', nullable: true })
   priority_score: number
+
+  @OneToOne(type => PerformanceMeasurement, perf => perf.risk_assessment_indicator)
+  perfermance_measurement: PerformanceMeasurement
+
 }

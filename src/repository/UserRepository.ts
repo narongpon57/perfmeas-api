@@ -13,4 +13,26 @@ export class UsersRepository extends Repository<Users> {
 			})
 			.getOne()
 	}
+
+	async findByCondition(code: string, name: string) {
+		return await getConnection()
+			.createQueryBuilder()
+			.select('users')
+			.from(Users, 'users')
+			.where(`employee_code like :code and (first_name || ' ' || last_name) like :name`, {
+				code: `%${code}%`,
+				name: `%${name}%`
+			})
+			.orderBy('id', 'ASC')
+			.getMany()
+	}
+
+	async findAll() {
+		return await getConnection()
+			.createQueryBuilder()
+			.select('users')
+			.from(Users, 'users')
+			.orderBy('id', 'DESC')
+			.getMany()
+	}
 }

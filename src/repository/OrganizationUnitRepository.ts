@@ -25,6 +25,10 @@ export class OrganizationUnitRepository extends Repository<OrganizationUnit> {
 				name: `%${name}%`,
 				type: `%${type}%`
 			})
+			.orderBy({
+				'type': 'DESC',
+				'code': 'ASC'
+			})
 			.getMany()
 	}
 
@@ -37,6 +41,17 @@ export class OrganizationUnitRepository extends Repository<OrganizationUnit> {
 				org_id: orgId,
 			})
 			.getMany()
+	}
+
+	async findByOrgId(id: string) {
+		return await getRepository(OrganizationUnit)
+			.createQueryBuilder("organization_unit")
+			.leftJoinAndSelect("organization_unit.creator", "users")
+			.leftJoinAndSelect("organization_unit.step1_approver", "users1")
+			.where(`organization_unit.id = :id`, {
+				id: id
+			})
+			.getOne()
 	}
 
 }

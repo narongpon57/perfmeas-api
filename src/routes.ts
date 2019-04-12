@@ -6,6 +6,8 @@ import * as riskAssessment from './controller/RiskAssessmentController'
 import * as prioritization from './controller/PrioritizationController'
 import * as approval from './controller/ApprovalController'
 import * as authentication from './controller/AuthenticationController'
+import * as user from './controller/UserController'
+import * as perfmeas from './controller/PerformanceMeasurementController'
 const router: Router = Router();
 
 
@@ -21,7 +23,12 @@ router.get("/indicator/:id", indicatorMaster.findById)
 router.post("/indicator", indicatorMaster.create)
 router.put('/indicator', indicatorMaster.update)
 
+router.get("/users", user.findAll)
+router.get("/user", user.findCondition)
+router.get("/user/:id", user.findById)
+
 router.get("/organization_unit", organizationUnit.findCondition)
+router.get("/organization_unit/:id", organizationUnit.findById)
 
 router.get("/assessment", riskAssessment.getAssessment)
 
@@ -41,6 +48,12 @@ router.get('/prioritization_score', prioritization.getScore)
 router.post('/login', authentication.login)
 
 router.get('/worklist', riskAssessment.getWorkList)
+
+router.get('/performance_measurement', perfmeas.find)
+router.post('/performance_measurement', perfmeas.create)
+
+router.get('/performance_indicator', perfmeas.getIndicator)
+
 
 
 export const routes: Router = router;

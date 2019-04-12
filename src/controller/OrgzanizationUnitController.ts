@@ -13,6 +13,17 @@ const findCondition = async (req: Request, res: Response) => {
 	}
 }
 
+const findById = async (req: Request, res: Response) => {
+	try {
+		const repo = getCustomRepository(OrganizationUnitRepository)
+		const result = await repo.findByOrgId(req.params.id)
+		return res.status(200).json({ result })
+	} catch (e) {
+		return res.status(500).json(e)
+	}
+}
+
 export {
-	findCondition
+	findCondition,
+	findById
 }

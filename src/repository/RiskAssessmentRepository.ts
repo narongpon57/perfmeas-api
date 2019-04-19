@@ -21,4 +21,17 @@ export class RiskAssessmentRepository extends Repository<RiskAssessment> {
 			})
 			.getMany()
 	}
+
+	async getExportData(orgId: string, year: string) {
+		return await getConnection()
+			.createEntityManager()
+			.query(`
+				SELECT ra.*, rm.*, im.*
+				FROM risk_assessment ra
+				LEFT JOIN risk_master rm on rm.id = ra.risk_id
+				LEFT JOIN assessment a on a.id = ra.assessment_id
+				LEFT JOIN risk_assessment_indicator rai on rai.risk_assessment_id = ra.id
+				LEFT JOIN indicator_master im on im.id = rai.indicator_id
+				WHERE a.org_id = $1 AND a.year = $2`, [orgId, year])
+	}
 }

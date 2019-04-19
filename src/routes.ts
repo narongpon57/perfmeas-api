@@ -8,6 +8,7 @@ import * as approval from './controller/ApprovalController'
 import * as authentication from './controller/AuthenticationController'
 import * as user from './controller/UserController'
 import * as perfmeas from './controller/PerformanceMeasurementController'
+import * as exportExcel from './controller/ExportController'
 const router: Router = Router();
 
 
@@ -53,6 +54,10 @@ router.get('/performance_measurement', perfmeas.find)
 router.post('/performance_measurement', perfmeas.create)
 
 router.get('/performance_indicator', perfmeas.getIndicator)
+
+router.get('/risk_assessment_export', exportExcel.riskAssessment)
+router.get('/prioritization_export', exportExcel.prioritization)
+router.get('/performance_measurement_export', exportExcel.performanceMeasurement)
 
 
 

@@ -6,8 +6,7 @@ const create = async (req: Request, res: Response) => {
 	try {
 		const repo = getCustomRepository(IndicatorMasterRepository)
 		const lastRow = await repo.getLastRow()
-		let newCode = 'R' + ('00' + (parseInt(lastRow.code.split('R')[1]) + 1)).slice(-3)
-		let formular = ''
+		let newCode = 'BHQ' + new Date().getFullYear() + ('000' + (parseInt(lastRow.code.slice(-4)) + 1)).slice(-4)
 		const indicatorMaster = repo.create()
 		indicatorMaster.code = newCode
 		indicatorMaster.name = req.body.name
@@ -15,7 +14,7 @@ const create = async (req: Request, res: Response) => {
 		indicatorMaster.reason = req.body.reason
 		indicatorMaster.indicator_type = req.body.indicator_type
 		indicatorMaster.unit = req.body.unit
-		indicatorMaster.formular = formular
+		indicatorMaster.formular = req.body.formular
 		indicatorMaster.operator = req.body.operator
 		indicatorMaster.target = req.body.target
 		indicatorMaster.multiplier = req.body.multiplier
@@ -56,9 +55,9 @@ const findAll = async (req: Request, res: Response) => {
 
 const findCondition = async (req: Request, res: Response) => {
 	try {
-		const { name, indicator_type, standard, measurement_domain } = req.query
+		const { code, name, frequency, indicator_type, standard, measurement_domain } = req.query
 		const repo = getCustomRepository(IndicatorMasterRepository)
-		const result = await repo.findByCondition(name, indicator_type, standard, measurement_domain)
+		const result = await repo.findByCondition(code, name, frequency, indicator_type, standard, measurement_domain)
 		return res.status(200).json({ result })
 	} catch (e) {
 		return res.status(500).json(e)
@@ -69,14 +68,14 @@ const update = async (req: Request, res: Response) => {
 	try {
 		const repo = getCustomRepository(IndicatorMasterRepository)
 		const indicatorMaster = repo.create()
-		let formular = ''
 		indicatorMaster.id = req.body.id
 		indicatorMaster.name = req.body.name
 		indicatorMaster.description = req.body.description
 		indicatorMaster.reason = req.body.reason
 		indicatorMaster.indicator_type = req.body.indicator_type
+		indicatorMaster.frequency = req.body.frequency
 		indicatorMaster.unit = req.body.unit
-		indicatorMaster.formular = formular
+		indicatorMaster.formular = req.body.formular
 		indicatorMaster.operator = req.body.operator
 		indicatorMaster.target = req.body.target
 		indicatorMaster.multiplier = req.body.multiplier

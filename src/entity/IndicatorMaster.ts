@@ -21,6 +21,9 @@ export class IndicatorMaster {
   @Column({ type: 'varchar', length: 100 })
   indicator_type: string;
 
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  frequency: string;
+
   @Column({ type: 'varchar', length: 100 })
   formular: string;
 

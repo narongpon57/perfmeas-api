@@ -9,6 +9,7 @@ import * as authentication from './controller/AuthenticationController'
 import * as user from './controller/UserController'
 import * as perfmeas from './controller/PerformanceMeasurementController'
 import * as exportExcel from './controller/ExportController'
+import * as period from './controller/PeriodController'
 const router: Router = Router();
 
 
@@ -23,6 +24,12 @@ router.get("/indicator", indicatorMaster.findCondition)
 router.get("/indicator/:id", indicatorMaster.findById)
 router.post("/indicator", indicatorMaster.create)
 router.put('/indicator', indicatorMaster.update)
+
+router.get("/periods", period.findAll)
+router.get("/period", period.findCondition)
+router.get("/period/:id", period.findById)
+router.post("/period", period.create)
+router.put('/period', period.update)
 
 router.get("/users", user.findAll)
 router.get("/user", user.findCondition)

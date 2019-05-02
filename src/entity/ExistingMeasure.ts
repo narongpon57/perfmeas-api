@@ -7,11 +7,11 @@ export class ExistingMeasure {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(type => IndicatorMaster)
+  @ManyToOne(type => IndicatorMaster, indicator => indicator.existing_indicator)
   @JoinColumn({ name: 'indicator_id ' })
-  indicator_id: IndicatorMaster
+  indicator: IndicatorMaster
 
-  @ManyToOne(type => RiskMaster)
+  @ManyToOne(type => RiskMaster, risk => risk.existing_risk)
   @JoinColumn({ name: 'risk_id ' })
-  risk_id: RiskMaster
+  risk: RiskMaster
 }

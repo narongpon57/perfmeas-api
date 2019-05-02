@@ -30,6 +30,7 @@ router.get("/period", period.findCondition)
 router.get("/period/:id", period.findById)
 router.post("/period", period.create)
 router.put('/period', period.update)
+router.get('/on_period', period.getOnPeriod)
 
 router.get("/users", user.findAll)
 router.get("/user", user.findCondition)

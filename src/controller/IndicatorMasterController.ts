@@ -14,6 +14,7 @@ const create = async (req: Request, res: Response) => {
 		indicatorMaster.reason = req.body.reason
 		indicatorMaster.indicator_type = req.body.indicator_type
 		indicatorMaster.unit = req.body.unit
+		indicatorMaster.frequency = req.body.frequency
 		indicatorMaster.formular = req.body.formular
 		indicatorMaster.operator = req.body.operator
 		indicatorMaster.target = req.body.target
@@ -47,6 +48,7 @@ const findAll = async (req: Request, res: Response) => {
 	try {
 		const repo = getCustomRepository(IndicatorMasterRepository)
 		const result = await repo.findAll()
+
 		return res.status(200).json({ result })
 	} catch (e) {
 		return res.status(500).json(e)

@@ -78,11 +78,27 @@ const update = async (req: Request, res: Response) => {
 const deleteById = async (req: Request, res: Response) => {
 }
 
+const getOnPeriod = async (req: Request, res: Response) => {
+	try {
+		const { type, year } = req.query
+		let query = ''
+		if (year !== '') {
+			query = `and year=${year}`
+		}
+		const repo = getCustomRepository(PeriodRepository)
+		const result = await repo.getOnPeriod(type, year)
+		return res.status(200).json({ result })
+	} catch (e) {
+		return res.status(500).json(e)
+	}
+}
+
 export {
 	create,
 	findById,
 	findAll,
 	findCondition,
 	update,
-	deleteById
+	deleteById,
+	getOnPeriod
 }

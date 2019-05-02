@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import { getCustomRepository } from 'typeorm'
 import { ApprovalRepository } from '../repository/ApprovalRepository'
 import { AssessmentRepository } from '../repository/AssessmentRepository'
+import { notification } from '../service/Mail';
 
 const create = async (req: Request, res: Response) => {
 	try {
@@ -15,10 +16,11 @@ const create = async (req: Request, res: Response) => {
 		if (is_admin) {
 			approval.created_by = approve_by
 		}
-		const approve = await approvalrepo.save(approval)
-		await assessmentRepo.updateStatus(assessment_id, status)
-		const result = await approvalrepo.finds(approve.id)
-		return res.status(201).json({ result })
+		const noti = notification(assessment_id, is_admin, status, approve_by)
+		// const approve = await approvalrepo.save(approval)
+		// await assessmentRepo.updateStatus(assessment_id, status)
+		// const result = await approvalrepo.finds(approve.id)
+		return res.status(201).json({ result: true })
 	} catch (e) {
 		console.log(e)
 		return res.status(500).json({ e })

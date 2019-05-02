@@ -21,7 +21,11 @@ const update = async (req: Request, res: Response) => {
     const currentRiskAssessment = await repoRiskAssessment.find({ assessment_id: req.body.assessment.id })
     for (let item of currentRiskAssessment) {
       const repoRiskIndicator = getCustomRepository(RiskAssessmentIndicatorRepository)
-      const currentRiskIndicator = await repoRiskIndicator.find({ risk_assessment_id: item.id })
+      const currentRiskIndicator = await repoRiskIndicator.find({
+        where: {
+          risk_assessment_id: item.id
+        }
+      })
       const removeRiskIndicator = await repoRiskIndicator.remove(currentRiskIndicator)
     }
     const removeRiskAssessment = await repoRiskAssessment.remove(currentRiskAssessment)

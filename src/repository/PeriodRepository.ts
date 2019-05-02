@@ -32,4 +32,13 @@ export class PeriodRepository extends Repository<AssessmentTime> {
 			.getMany()
 	}
 
+	async getOnPeriod(type: string, year: number) {
+		return await getConnection()
+			.createEntityManager()
+			.query(`
+			SELECT 1 as on_period
+			FROM assessment_time
+			WHERE type = $1 and year = $2 and status='Published' and published_date < now() and (date_to >= now() and date_from <= now())
+			`, [type, year])
+	}
 }

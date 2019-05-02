@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { RiskAssessmentIndicator } from './RiskAssessmentIndicator';
+import { ExistingMeasure } from './ExistingMeasure';
 
 @Entity()
 export class IndicatorMaster {
@@ -62,4 +63,7 @@ export class IndicatorMaster {
 
   @OneToMany(type => RiskAssessmentIndicator, risk_indicator => risk_indicator.indicator)
   risk_indicator: RiskAssessmentIndicator[]
+
+  @OneToMany(type => ExistingMeasure, existing => existing.indicator)
+  existing_indicator: RiskAssessmentIndicator[]
 }

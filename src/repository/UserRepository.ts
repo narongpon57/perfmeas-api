@@ -35,4 +35,20 @@ export class UsersRepository extends Repository<Users> {
 			.orderBy('id', 'DESC')
 			.getMany()
 	}
+
+	async getAllAdmin() {
+		return await getConnection()
+			.createEntityManager()
+			.query(`SELECT users.*, users.first_name || ' ' || users.last_name as admin_name
+			FROM users 
+			WHERE is_admin = 1` )
+	}
+
+	async getAdmin(id: string) {
+		return await getConnection()
+			.createEntityManager()
+			.query(`SELECT users.*, users.first_name || ' ' || users.last_name as admin_name
+			FROM users 
+			WHERE id = $1 and is_admin = 1`, [id])
+	}
 }

@@ -38,6 +38,7 @@ router.get("/user/:id", user.findById)
 
 router.get("/organization_unit", organizationUnit.findCondition)
 router.get("/organization_unit/:id", organizationUnit.findById)
+router.put("/organization_unit/", organizationUnit.update)
 
 router.get("/assessment", riskAssessment.getAssessment)
 

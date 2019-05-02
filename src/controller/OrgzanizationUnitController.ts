@@ -23,7 +23,23 @@ const findById = async (req: Request, res: Response) => {
 	}
 }
 
+const update = async (req: Request, res: Response) => {
+	try {
+		const repo = getCustomRepository(OrganizationUnitRepository)
+		const ou = repo.create()
+		ou.id = req.body.id
+		ou.creator = req.body.creator.id
+		ou.step1_approver = req.body.step1_approver.id
+		const result = await repo.save(ou)
+		return res.status(201).json({ result })
+	} catch (e) {
+		console.log(e)
+		return res.status(500).json(e)
+	}
+}
+
 export {
 	findCondition,
-	findById
+	findById,
+	update
 }

@@ -1892,7 +1892,7 @@ const checkTarget = (value, operator, target1) => {
 				onTarget = value >= target
 				break
 			case '<=':
-				onTarget = value >= target
+				onTarget = value <= target
 				break
 			case '!=':
 				onTarget = value !== target
@@ -1924,7 +1924,7 @@ const checkTargetSummary = (perf, unit, operator, target1) => {
 				onTarget = ytdMonth >= target
 				break
 			case '<=':
-				onTarget = ytdMonth >= target
+				onTarget = ytdMonth <= target
 				break
 			case '!=':
 				onTarget = ytdMonth !== target

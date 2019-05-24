@@ -92,14 +92,7 @@ export class OrganizationUnitRepository extends Repository<OrganizationUnit> {
 				LEFT JOIN risk_assessment ra on ra.id = rai.risk_assessment_id
 				LEFT JOIN assessment a on a.id = ra.assessment_id
 				LEFT JOIN organization_unit ou on ou.id = a.org_id
-				WHERE a.year = $1 and a.status = 'QIKM Approve' and rai.id not in 
-				(SELECT risk_assessment_indicator_id 
-				FROM performance_measurement pm
-				LEFT JOIN risk_assessment_indicator rai on rai.id = pm.risk_assessment_indicator_id
-				LEFT JOIN risk_assessment ra on ra.id = rai.risk_assessment_id
-				LEFT JOIN assessment a on a.id = ra.assessment_id
-				LEFT JOIN organization_unit ou on ou.id = a.org_id
-				WHERE a.year = $1 and a.status = 'QIKM Approve')`, [year])
+				WHERE a.year = $1 and a.status = 'QIKM Approve' and rai.priority_score is null`, [year])
 	}
 
 }

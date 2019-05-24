@@ -25,4 +25,14 @@ export class AssessmentRepository extends Repository<Assessment> {
 			.getMany()
 	}
 
+	async getAdminWorkList() {
+		return await getRepository(Assessment)
+			.createQueryBuilder("assessment")
+			.leftJoinAndSelect("assessment.org", "organization_unit")
+			.leftJoinAndSelect("organization_unit.creator", "users")
+			.leftJoinAndSelect("organization_unit.step1_approver", "users1")
+			.where("assessment.status in ('Waiting For Approve', 'Manager Approve')")
+			.getMany()
+	}
+
 }

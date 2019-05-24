@@ -3,14 +3,18 @@ import { getCustomRepository } from 'typeorm'
 import { AssessmentRepository } from '../repository/AssessmentRepository'
 import { RiskAssessmentRepository } from '../repository/RiskAssessmentRepository';
 import { RiskAssessmentIndicatorRepository } from '../repository/RiskAssessmentIndicatorRepository';
+import { notification } from '../service/Mail';
 
 const create = async (req: Request, res: Response) => {
   try {
-
     const assessment = await createAssessment({ org_id: req.body.org.id, year: req.body.year }, req.body.status)
     const riskAssessment = await createRiskAssessment({ risk_assessments: req.body.assessment.risk_assessment }, assessment.id)
+    if (req.body.status !== 'Draft') {
+      await notification(assessment.id.toString(), 0, req.body.status, null)
+    }
     return res.status(201).json({ result: assessment })
   } catch (e) {
+    console.log(e)
     return res.status(500).json(e)
   }
 }
@@ -32,6 +36,9 @@ const update = async (req: Request, res: Response) => {
 
     const riskAssessment = await createRiskAssessment({ risk_assessments: req.body.assessment.risk_assessment }, req.body.assessment.id)
     const updateAssessmentStatus = await updateRiskAssessment(req.body.status, req.body.assessment.id)
+    if (req.body.status !== 'Draft') {
+      await notification(req.body.assessment.id, 0, req.body.status, null)
+    }    
     return res.status(201).json({})
   } catch (e) {
     return res.status(500).json(e)
@@ -64,6 +71,16 @@ const getWorkList = async (req: Request, res: Response) => {
   try {
     const repo = getCustomRepository(AssessmentRepository)
     const result = await repo.getWorkList(req.query.user_id)
+    return res.status(200).json({ result })
+  } catch (e) {
+    return res.status(500).json({ e })
+  }
+}
+
+const getAdminWorkList = async (req: Request, res: Response) => {
+  try {
+    const repo = getCustomRepository(AssessmentRepository)
+    const result = await repo.getAdminWorkList()
     return res.status(200).json({ result })
   } catch (e) {
     return res.status(500).json({ e })
@@ -138,5 +155,6 @@ export {
   update,
   getRiskAssessment,
   getAssessment,
-  getWorkList
+  getWorkList,
+  getAdminWorkList
 }

@@ -55,4 +55,51 @@ export class OrganizationUnitRepository extends Repository<OrganizationUnit> {
 			WHERE a.id = $1`, [assessmentId])
 	}
 
+	async getOURiskAssessment(year: number) {
+		return await getConnection()
+			.createEntityManager()
+			.query(`SELECT *
+				FROM organization_unit ou
+				WHERE ou.id in 
+				(SELECT org_id FROM assessment WHERE year = $1 and status != 'QIKM Approve')`, [year])
+	}
+
+	async getOUNotInProcess(year: number) {
+		return await getConnection()
+			.createEntityManager()
+			.query(`SELECT *
+				FROM organization_unit ou
+				WHERE ou.id not in (select org_id from assessment where year = $1)`, [year])
+	}
+
+	async getOUPerfMeas(year: number) {
+		return await getConnection()
+			.createEntityManager()
+			.query(`SELECT DISTINCT ou.*
+				FROM performance_measurement pm
+				LEFT JOIN risk_assessment_indicator rai on rai.id = pm.risk_assessment_indicator_id
+				LEFT JOIN risk_assessment ra on ra.id = rai.risk_assessment_id
+				LEFT JOIN assessment a on a.id = ra.assessment_id
+				LEFT JOIN organization_unit ou on ou.id = a.org_id
+				WHERE a.year = $1`, [year])
+	}
+
+	async getOUPrioritization(year: number) {
+		return await getConnection()
+			.createEntityManager()
+			.query(`SELECT DISTINCT ou.*
+				FROM risk_assessment_indicator rai
+				LEFT JOIN risk_assessment ra on ra.id = rai.risk_assessment_id
+				LEFT JOIN assessment a on a.id = ra.assessment_id
+				LEFT JOIN organization_unit ou on ou.id = a.org_id
+				WHERE a.year = $1 and a.status = 'QIKM Approve' and rai.id not in 
+				(SELECT risk_assessment_indicator_id 
+				FROM performance_measurement pm
+				LEFT JOIN risk_assessment_indicator rai on rai.id = pm.risk_assessment_indicator_id
+				LEFT JOIN risk_assessment ra on ra.id = rai.risk_assessment_id
+				LEFT JOIN assessment a on a.id = ra.assessment_id
+				LEFT JOIN organization_unit ou on ou.id = a.org_id
+				WHERE a.year = $1 and a.status = 'QIKM Approve')`, [year])
+	}
+
 }

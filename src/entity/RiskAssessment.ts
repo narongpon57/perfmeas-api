@@ -25,7 +25,7 @@ export class RiskAssessment {
   @Column({ type: 'int' })
   risk_score: number
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text' })
   mitigation_strategy: number
 
   @OneToMany(type => RiskAssessmentIndicator, risk_indicator => risk_indicator.risk_assessment_id)

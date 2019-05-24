@@ -5,16 +5,26 @@ import { PeriodRepository } from '../repository/PeriodRepository';
 const create = async (req: Request, res: Response) => {
 	try {
 		const repo = getCustomRepository(PeriodRepository)
-		const period = repo.create()
-		period.name = req.body.name
-		period.type = req.body.type
-		period.year = req.body.year
-		period.status = req.body.status
-		period.date_from = req.body.date_from
-		period.date_to = req.body.date_to
-		period.published_date = req.body.published_date
-		const result = await repo.save(period)
-		return res.status(201).json({ result })
+		let query = ''
+		let year = req.body.year
+		if (year !== '' && year !== undefined) {
+			query = `and year=${year}`
+		}
+		const exPeriod = await repo.findByCondition(req.body.type, query, '', '')
+		if (exPeriod.length) {
+			return res.status(500).json({ msg: 'Dupplicate Period Data' })
+		} else {
+			const period = repo.create()
+			period.name = req.body.name
+			period.type = req.body.type
+			period.year = req.body.year
+			period.status = req.body.status
+			period.date_from = req.body.date_from
+			period.date_to = req.body.date_to
+			period.published_date = req.body.published_date
+			const result = await repo.save(period)
+			return res.status(201).json({ result })
+		}
 	} catch (e) {
 		return res.status(500).json(e)
 	}
@@ -45,7 +55,7 @@ const findCondition = async (req: Request, res: Response) => {
 	try {
 		const { type, name, year, status } = req.query
 		let query = ''
-		if (year !== '') {
+		if (year !== '' && year !== undefined) {
 			query = `and year=${year}`
 		}
 		const repo = getCustomRepository(PeriodRepository)

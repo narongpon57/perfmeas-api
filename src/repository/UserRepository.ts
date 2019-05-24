@@ -41,7 +41,7 @@ export class UsersRepository extends Repository<Users> {
 			.createEntityManager()
 			.query(`SELECT users.*, users.first_name || ' ' || users.last_name as admin_name
 			FROM users 
-			WHERE is_admin = 1` )
+			WHERE is_admin = B'1'` )
 	}
 
 	async getAdmin(id: string) {
@@ -49,6 +49,6 @@ export class UsersRepository extends Repository<Users> {
 			.createEntityManager()
 			.query(`SELECT users.*, users.first_name || ' ' || users.last_name as admin_name
 			FROM users 
-			WHERE id = $1 and is_admin = 1`, [id])
+			WHERE id = $1 and is_admin = B'1'`, [id])
 	}
 }

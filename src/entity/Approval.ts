@@ -18,7 +18,7 @@ export class Approval {
   @Column({ type: 'varchar', length: 100 })
   status: string
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   description: string
 
   @CreateDateColumn()

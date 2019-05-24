@@ -9,6 +9,21 @@ export class RiskMasterRepository extends Repository<RiskMaster> {
 			.createQueryBuilder('risk_master')
 			.leftJoinAndSelect('risk_master.existing_risk', 'existing_measure')
 			.leftJoinAndSelect('existing_measure.indicator', 'indicator_master')
+			.where(`risk_group like :risk_group and risk_type like :risk_type and problem_area like :problem_area and identified like :identified and risk_master.is_active = B'1'`, {
+				risk_group: `%${riskGroup}%`,
+				risk_type: `%${riskType}%`,
+				problem_area: `%${problemArea}%`,
+				identified: `%${identified}%`
+			})
+			.orderBy('risk_master.id', 'ASC')
+			.getMany()
+	}
+
+	async findByConditionMaster(riskGroup: string, riskType: string, problemArea: string, identified: string) {
+		return await getRepository(RiskMaster)
+			.createQueryBuilder('risk_master')
+			.leftJoinAndSelect('risk_master.existing_risk', 'existing_measure')
+			.leftJoinAndSelect('existing_measure.indicator', 'indicator_master')
 			.where(`risk_group like :risk_group and risk_type like :risk_type and problem_area like :problem_area and identified like :identified`, {
 				risk_group: `%${riskGroup}%`,
 				risk_type: `%${riskType}%`,

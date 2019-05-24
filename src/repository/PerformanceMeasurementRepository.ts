@@ -23,4 +23,19 @@ export class PerformanceMeasurementRepository extends Repository<PerformanceMeas
 			LEFT JOIN indicator_master im on im.id = rai.indicator_id
 			WHERE a.id = $1`, [assessmentId])
 	}
+
+
+	async getPerfByIndicator(indicatorId: String, year: string) {
+		return await getRepository(PerformanceMeasurement)
+			.query(`SELECT perf.*, im.code, im.name, im.multiplier, im.divisor, im.formular, im.unit, 
+					im.operator, im.target, im.frequency, perf.id as perf_id, a.id as assessment_id,
+					ou.name as orgamization_name, ou.id as organization_id, ou.code as organization_code
+					FROM performance_measurement perf 
+					LEFT JOIN risk_assessment_indicator rai ON perf.risk_assessment_indicator_id = rai.id 
+					LEFT JOIN indicator_master im ON rai.indicator_id = im.id
+					LEFT JOIN risk_assessment ra ON rai.risk_assessment_id = ra.id
+					LEFT JOIN assessment a on ra.assessment_id = a.id
+					LEFT JOIN organization_unit ou on ou.id = a.org_id
+					WHERE im.id = $1 AND a.year = $2`, [indicatorId, year])
+	}
 }

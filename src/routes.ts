@@ -10,6 +10,7 @@ import * as user from './controller/UserController'
 import * as perfmeas from './controller/PerformanceMeasurementController'
 import * as exportExcel from './controller/ExportController'
 import * as period from './controller/PeriodController'
+import * as chart from './controller/ChartController'
 const router: Router = Router();
 
 
@@ -54,10 +55,12 @@ router.post('/approval', approval.create)
 router.get('/prioritization', prioritization.getPrioritization)
 router.post('/prioritization', prioritization.create)
 router.get('/prioritization_score', prioritization.getScore)
+router.get('/prioritization_topscore', prioritization.getTop5Score)
 
 router.post('/login', authentication.login)
 
 router.get('/worklist', riskAssessment.getWorkList)
+router.get('/admin_worklist', riskAssessment.getAdminWorkList)
 
 router.get('/performance_measurement', perfmeas.find)
 router.post('/performance_measurement', perfmeas.create)
@@ -67,7 +70,11 @@ router.get('/performance_indicator', perfmeas.getIndicator)
 router.get('/risk_assessment_export', exportExcel.riskAssessment)
 router.get('/prioritization_export', exportExcel.prioritization)
 router.get('/performance_measurement_export', exportExcel.performanceMeasurement)
+router.get('/indicator_export', exportExcel.indicator)
 
-
+router.get('/get_ou_risk_assessment', chart.getOURiskAssessment)
+router.get('/get_ou_prioritization', chart.getOUPrioritization)
+router.get('/get_ou_perfmeas', chart.getOUPerfMeas)
+router.get('/get_ou_other', chart.getOUNotInProcess)
 
 export const routes: Router = router;

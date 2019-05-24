@@ -7,7 +7,10 @@ const create = async (req: Request, res: Response) => {
 	try {
 		const repo = getCustomRepository(RiskMasterRepository)
 		const lastRow = await repo.getLastRow()
-		let newCode = 'R' + ('00' + (parseInt(lastRow.code.split('R')[1]) + 1)).slice(-3)
+		let newCode = 'R0001'
+		if (lastRow) {
+			newCode = 'R' + ('00' + (parseInt(lastRow.code.split('R')[1]) + 1)).slice(-3)
+		}
 		const riskMaster = repo.create()
 		riskMaster.code = newCode
 		riskMaster.description = req.body.description
@@ -17,11 +20,12 @@ const create = async (req: Request, res: Response) => {
 		riskMaster.problem_area = req.body.problem_area
 		riskMaster.is_active = req.body.is_active
 		const result = await repo.save(riskMaster)
-		if (req.body.existing_risk !== undefined) {
+		if (req.body.existing_risk !== undefined && req.body.existing_risk.length) {
 			await createExistingMeasure({ existingMeasure: req.body.existing_risk, riskId: result.id })
 		}
 		return res.status(201).json({ result })
 	} catch (e) {
+		console.log(e)
 		return res.status(500).json(e)
 	}
 }
@@ -50,7 +54,12 @@ const findCondition = async (req: Request, res: Response) => {
 	try {
 		const { risk_group, risk_type, identified, problem_area } = req.query
 		const repo = getCustomRepository(RiskMasterRepository)
-		const result = await repo.findByCondition(risk_group, risk_type, identified, problem_area)
+		let result = null
+		if (req.query.is_master) {
+			result = await repo.findByConditionMaster(risk_group, risk_type, identified, problem_area)
+		} else {
+			result = await repo.findByCondition(risk_group, risk_type, identified, problem_area)
+		}
 		return res.status(200).json({ result })
 	} catch (e) {
 		return res.status(500).json(e)
@@ -101,14 +110,17 @@ const createExistingMeasure = async (obj) => {
 
 const updateExistingMeasure = async (obj) => {
 	try {
+		let queryId = ''
 		const existingRepo = getCustomRepository(ExistingMeasureRepository)
 		const existingId = obj.existingMeasure.filter(o => {
 			return o.id !== null
 		}).map(ex => {
 			return ex.id
 		}).join(',')
-
-		await existingRepo.deleteExistingMeasure(existingId, obj.riskId)
+		if (existingId !== '') {
+			queryId = `and id NOT IN (${existingId})`
+		}
+		await existingRepo.deleteExistingMeasure(queryId, obj.riskId)
 		for (let e of obj.existingMeasure) {
 			const existingMeasure = existingRepo.create()
 			existingMeasure.id = e.id

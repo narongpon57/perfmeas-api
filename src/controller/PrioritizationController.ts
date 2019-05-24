@@ -30,11 +30,19 @@ const create = async (req: Request, res: Response) => {
 		}
 
 		if (!req.body.isDraft) {
-			const maxPiority = _.maxBy(req.body.prioritization, 'priority_score')
+			const topScore = req.body.prioritization.reduce((max, obj) => {
+				return obj.priority_score > max ? obj.priority_score : max
+			}, 0)
+			const targetPerfMeas = req.body.prioritization.filter(obj => {
+				return obj.priority_score === topScore
+			})
+			// const maxPiority = _.maxBy(req.body.prioritization, 'priority_score')
 			const perfMeasRepo = getCustomRepository(PerformanceMeasurementRepository)
-			const perfMeas = perfMeasRepo.create()
-			perfMeas.risk_assessment_indicator = maxPiority.risk_assessment_indicator_id
-			await perfMeasRepo.save(perfMeas)
+			for (let perf of targetPerfMeas) {
+				const perfMeas = perfMeasRepo.create()
+				perfMeas.risk_assessment_indicator = perf.risk_assessment_indicator_id
+				await perfMeasRepo.save(perfMeas)
+			}
 		}
 
 		return res.status(201).json({ result: true })
@@ -75,9 +83,20 @@ const getScore = async (req: Request, res: Response) => {
 	}
 }
 
+const getTop5Score = async (req: Request, res: Response) => {
+	try {
+		const repo = getCustomRepository(PrioritizationRepository)
+		const result = await repo.getTop5Score(req.query.year)
+		return res.status(200).json({ result })
+	} catch (e) {
+		return res.status(500).json({ e })
+	}
+}
+
 export {
 	create,
 	getCriteria,
 	getPrioritization,
-	getScore
+	getScore,
+	getTop5Score
 }

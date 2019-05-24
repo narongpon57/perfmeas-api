@@ -6,7 +6,10 @@ const create = async (req: Request, res: Response) => {
 	try {
 		const repo = getCustomRepository(IndicatorMasterRepository)
 		const lastRow = await repo.getLastRow()
-		let newCode = 'BHQ' + new Date().getFullYear() + ('000' + (parseInt(lastRow.code.slice(-4)) + 1)).slice(-4)
+		let newCode = 'BHQ' + new Date().getFullYear() + '0001'
+		if (lastRow) {
+			newCode = 'BHQ' + new Date().getFullYear() + ('000' + (parseInt(lastRow.code.slice(-4)) + 1)).slice(-4)
+		}
 		const indicatorMaster = repo.create()
 		indicatorMaster.code = newCode
 		indicatorMaster.name = req.body.name
@@ -59,7 +62,12 @@ const findCondition = async (req: Request, res: Response) => {
 	try {
 		const { code, name, frequency, indicator_type, standard, measurement_domain } = req.query
 		const repo = getCustomRepository(IndicatorMasterRepository)
-		const result = await repo.findByCondition(code, name, frequency, indicator_type, standard, measurement_domain)
+		let result = null
+		if (req.query.is_master) {
+			result = await repo.findByConditionMaster(code, name, frequency, indicator_type, standard, measurement_domain)
+		} else {
+			result = await repo.findByCondition(code, name, frequency, indicator_type, standard, measurement_domain)
+		}
 		return res.status(200).json({ result })
 	} catch (e) {
 		return res.status(500).json(e)

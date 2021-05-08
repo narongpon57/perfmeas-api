@@ -22,7 +22,7 @@
       "nodemailer": "^6.1.0",
       "pg": "^7.9.0",
       "reflect-metadata": "^0.1.13",
-      "typeorm": "^0.2.15"
+      "typeorm": "^0.2.25"
    },
    "scripts": {
       "start": "ts-node src/index.ts"
